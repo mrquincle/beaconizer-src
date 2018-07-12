@@ -14,8 +14,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.LinearLayout
-import java.nio.ByteBuffer
-import java.util.*
+
+fun String.toFullUUID(): String {
+    return when (this.length) {
+        4 -> "0000$this-0000-1000-8000-00805F9B34FB"
+        8 -> "$this-0000-1000-8000-00805F9B34FB"
+        else -> this
+    }
+}
 
 class MainActivity : AppCompatActivity() {
 
@@ -91,11 +97,12 @@ class MainActivity : AppCompatActivity() {
         val advSettings = AdvertiseSettings.Builder().setAdvertiseMode(this.advFrequency!!).
                 setConnectable(false).setTxPowerLevel(this.advTxPower!!).build()
 
+        val uuid = "3333".toFullUUID()
         //val uuid =  UUID.randomUUID().toString()
-        val uuid = "0000" + "3333" + "-0000-1000-8000-00805F9B34FB"
-        Log.d("MainActivity", "onStart(): use uuid ${uuid}")
+        //val uuid = "0000" + "3333" + "-0000-1000-8000-00805F9B34FB"
+        //Log.d("MainActivity", "onStart(): use uuid ${uuid}")
         val advData = AdvertiseData.Builder().setIncludeDeviceName(true).
-                addServiceUuid(ParcelUuid(UUID.fromString(uuid))).build()
+                addServiceUuid(ParcelUuid.fromString(uuid)).build()
 
         val advCallback = object : AdvertiseCallback() {
             override fun onStartSuccess(settingsInEffect: AdvertiseSettings) {
